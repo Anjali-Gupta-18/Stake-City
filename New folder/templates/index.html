@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stake.city - User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .google-button {
+            background-color: #db4437;
+        }
+        .google-button:hover {
+            background-color: #c13527;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>User Registration</h2>
+    <form id="registerForm">
+        <input type="text" id="user_name" placeholder="User Name" required>
+        <input type="text" id="mobile" placeholder="Mobile Number" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="text" id="full_name" placeholder="Full Name" required>
+        <input type="number" id="age" placeholder="Age" required>
+        <select id="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+        <label>
+            <input type="checkbox" id="terms_accepted"> I accept the Terms and Conditions
+        </label>
+        <button type="button" onclick="registerUser()">Register</button>
+    </form>
+
+    <div id="response"></div>
+    
+    <hr>
+
+    <h3>Or</h3>
+    <button class="google-button" onclick="googleLogin()">Register with Google</button>
+</div>
+
+<script>
+    function registerUser() {
+        const userName = document.getElementById('user_name').value;
+        const mobile = document.getElementById('mobile').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const fullName = document.getElementById('full_name').value;
+        const age = document.getElementById('age').value;
+        const gender = document.getElementById('gender').value;
+        const termsAccepted = document.getElementById('terms_accepted').checked;
+
+        if (!termsAccepted) {
+            alert('You must accept the terms and conditions.');
+            return;
+        }
+
+        const userData = {
+            user_name: userName,
+            mobile: mobile,
+            email: email,
+            password: password,
+            full_name: fullName,
+            age: parseInt(age),
+            gender: gender,
+            terms_accepted: termsAccepted
+        };
+
+        fetch('http://localhost:5000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('response').innerHTML = `<p>${data.message}</p>`;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function googleLogin() {
+        window.location.href = 'http://localhost:5000/login/google';
+    }
+</script>
+
+</body>
+</html>
